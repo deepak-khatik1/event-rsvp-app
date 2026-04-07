@@ -12,13 +12,17 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setLoading(true);
     try {
       await login(email, password);
       toast.success('Login successful!');
       navigate('/events');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
+      const errorMsg = err.response?.data?.message || 'Login failed';
+      toast.error(errorMsg, { duration: 5000 });
+      return false;
     } finally {
       setLoading(false);
     }

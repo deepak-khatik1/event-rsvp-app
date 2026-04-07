@@ -19,12 +19,15 @@ api.interceptors.response.use(
     if (error.response) {
       const status = error.response.status;
       const message = error.response.data?.message || 'An error occurred';
+      const isLoginPage = window.location.pathname === '/login';
       
       if (status === 401) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        toast.error('Session expired. Please login again.');
-        window.location.href = '/login';
+        if (!isLoginPage) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          toast.error('Session expired. Please login again.');
+          window.location.href = '/login';
+        }
       } else if (status === 403) {
         toast.error('Access denied. You do not have permission for this action.');
       } else if (status === 404) {
