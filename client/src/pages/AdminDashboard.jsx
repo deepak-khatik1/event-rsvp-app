@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 import { joinAdmin, leaveAdmin, getSocket, connectSocket } from '../services/socket';
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   // Create/Edit form state
   const [formMode, setFormMode] = useState('create'); // 'create' or 'edit'
@@ -19,7 +19,6 @@ const AdminDashboard = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
-  const [formError, setFormError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
 
   // Attendee viewer
@@ -84,7 +83,7 @@ const AdminDashboard = () => {
       const res = await api.get('/events');
       setEvents(res.data);
     } catch (err) {
-      setError('Failed to load events');
+      toast.error('Failed to load events');
     } finally {
       setLoading(false);
     }
@@ -96,12 +95,10 @@ const AdminDashboard = () => {
     setImagePreview('');
     setFormMode('create');
     setEditingId(null);
-    setFormError('');
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setFormError('');
     setFormLoading(true);
 
     try {
@@ -119,16 +116,16 @@ const AdminDashboard = () => {
         await api.post('/admin/events', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        // Socket will handle adding the event to state
+        toast.success('Event created successfully!');
       } else {
         await api.put(`/admin/events/${editingId}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        // Socket will handle updating the event in state
+        toast.success('Event updated successfully!');
       }
       resetForm();
     } catch (err) {
-      setFormError(err.response?.data?.message || 'Operation failed');
+      toast.error(err.response?.data?.message || 'Operation failed');
     } finally {
       setFormLoading(false);
     }
@@ -162,9 +159,9 @@ const AdminDashboard = () => {
 
     try {
       await api.delete(`/admin/events/${eventId}`);
-      // Socket will handle removing the event from state
+      toast.success('Event deleted successfully!');
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete event');
+      toast.error(err.response?.data?.message || 'Failed to delete event');
     }
   };
 
@@ -199,19 +196,11 @@ const AdminDashboard = () => {
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">Admin Dashboard</h1>
 
-      {error && <div className="text-red-600 mb-4">{error}</div>}
-
       {/* Create/Edit Form */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
           {formMode === 'create' ? 'Create Event' : 'Edit Event'}
         </h2>
-
-        {formError && (
-          <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4">
-            {formError}
-          </div>
-        )}
 
         <form onSubmit={handleFormSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

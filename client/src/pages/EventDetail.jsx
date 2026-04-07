@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import RsvpButton from '../components/RsvpButton';
@@ -10,7 +11,6 @@ const EventDetail = () => {
   const { user } = useAuth();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -18,7 +18,7 @@ const EventDetail = () => {
         const res = await api.get(`/events/${id}`);
         setEvent(res.data);
       } catch (err) {
-        setError('Failed to load event');
+        toast.error('Failed to load event');
       } finally {
         setLoading(false);
       }
@@ -57,8 +57,8 @@ const EventDetail = () => {
     );
   }
 
-  if (error || !event) {
-    return <div className="text-center text-red-600 mt-8">{error || 'Event not found'}</div>;
+  if (!event) {
+    return <div className="text-center text-red-600 mt-8">Event not found</div>;
   }
 
   const goingCount = event.attendees.filter((a) => a.status === 'Going').length;

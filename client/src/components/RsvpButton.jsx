@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 const statuses = ['Going', 'Maybe', 'Not Going'];
@@ -11,9 +12,10 @@ const RsvpButton = ({ eventId, currentStatus, onRsvp, disabled }) => {
     setLoading(true);
     try {
       const res = await api.post(`/events/${eventId}/rsvp`, { status });
+      toast.success(`RSVP updated to ${status}!`);
       if (onRsvp) onRsvp(res.data.event);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to RSVP');
+      toast.error(err.response?.data?.message || 'Failed to RSVP');
     } finally {
       setLoading(false);
     }

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchMyEvents = async () => {
@@ -13,7 +13,7 @@ const MyEvents = () => {
         const res = await api.get('/users/my-events');
         setEvents(res.data);
       } catch (err) {
-        setError('Failed to load your events');
+        toast.error('Failed to load your events');
       } finally {
         setLoading(false);
       }
@@ -27,10 +27,6 @@ const MyEvents = () => {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
       </div>
     );
-  }
-
-  if (error) {
-    return <div className="text-center text-red-600 mt-8">{error}</div>;
   }
 
   const statusBadge = (status) => {
