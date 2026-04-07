@@ -47,49 +47,59 @@ This Event Management Application provides a comprehensive platform for users to
 ```
 event-app/
 ├── client/                 # React frontend application
+│   ├── public/            # Static assets
+│   │   ├── favicon.svg
+│   │   └── icons.svg
 │   ├── src/
-│   │   ├── components/     # Reusable UI components
+│   │   ├── assets/        # Project assets
+│   │   ├── components/    # Reusable UI components
+│   │   │   ├── AdminRoute.jsx
 │   │   │   ├── EventCard.jsx
-│   │   │   ├── EventDetail.jsx
 │   │   │   ├── Navbar.jsx
 │   │   │   ├── ProtectedRoute.jsx
 │   │   │   └── RsvpButton.jsx
-│   │   ├── pages/          # Page components
+│   │   ├── context/       # React context providers
+│   │   ├── pages/         # Page components
 │   │   │   ├── Events.jsx
 │   │   │   ├── EventDetail.jsx
 │   │   │   ├── Login.jsx
 │   │   │   ├── Register.jsx
 │   │   │   ├── MyEvents.jsx
 │   │   │   └── AdminDashboard.jsx
-│   │   ├── context/        # React context providers
-│   │   │   └── AuthContext.jsx
-│   │   ├── services/       # API and socket services
-│   │   │   ├── api.js
-│   │   │   └── socket.js
-│   │   ├── App.jsx         # Main application component
-│   │   └── main.jsx        # Application entry point
+│   │   ├── App.jsx        # Main application component
+│   │   ├── main.jsx       # Application entry point
+│   │   └── index.css      # Global styles
+│   ├── .gitignore
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
 │   └── package.json
-├── server/                 # Node.js backend application
-│   ├── config/            # Database configuration
+├── server/                # Node.js backend application
+│   ├── config/           # Database configuration
 │   │   └── db.js
-│   ├── controllers/       # Route controllers
+│   ├── controllers/      # Route controllers
+│   │   ├── adminController.js
 │   │   ├── authController.js
 │   │   ├── eventController.js
 │   │   └── userController.js
-│   ├── middleware/        # Custom middleware
-│   │   └── auth.js
-│   ├── models/           # Database models
+│   ├── middleware/       # Custom middleware
+│   │   ├── admin.js
+│   │   ├── auth.js
+│   │   └── upload.js
+│   ├── models/          # Database models
 │   │   ├── Event.js
 │   │   └── User.js
-│   ├── routes/           # API routes
+│   ├── routes/          # API routes
 │   │   ├── admin.js
 │   │   ├── auth.js
 │   │   ├── events.js
 │   │   └── users.js
-│   ├── uploads/          # File upload directory
-│   ├── socket.js         # Socket.IO configuration
-│   ├── index.js          # Server entry point
+│   ├── socket/          # Socket.IO configuration
+│   │   └── index.js
+│   ├── uploads/         # File upload directory (created dynamically)
+│   ├── index.js         # Server entry point
 │   └── package.json
+├── .gitignore
 └── README.md
 ```
 
@@ -162,20 +172,23 @@ event-app/
 - `GET /api/events/:id` - Get specific event details
 - `POST /api/events/:id/rsvp` - RSVP to an event
 
+### Users
+- `GET /api/users/my-events` - Get current user's RSVP history
+
 ### Admin Routes
-- `GET /api/admin/events` - Get all events (admin)
-- `POST /api/admin/events` - Create new event
-- `PUT /api/admin/events/:id` - Update event
+- `POST /api/admin/events` - Create new event (with image upload)
+- `PUT /api/admin/events/:id` - Update event (with image upload)
 - `DELETE /api/admin/events/:id` - Delete event
-- `GET /api/admin/users` - Get all users
+- `GET /api/admin/events/:id/attendees` - Get event attendees list
 
 ### File Upload
-- `POST /api/admin/upload` - Upload event image
+- Image uploads are handled automatically with event creation/update via multer middleware
+- Images are stored in `/uploads` directory and served statically at `/uploads/[filename]`
 
 ## 🔧 Installation & Setup
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- Node.js (v18 or higher recommended)
 - MongoDB (local or cloud instance)
 - npm or yarn package manager
 
@@ -211,18 +224,7 @@ event-app/
 
 5. **Start the application**
 
-   **Option 1: Single Service Deployment (Production)**
-   ```bash
-   # From project root - builds client and starts server
-   cd server
-   npm run build-and-start
-   
-   # Or use the deployment script
-   chmod +x deploy.sh
-   ./deploy.sh
-   ```
-
-   **Option 2: Development Mode (Separate Services)**
+   **Option 1: Development Mode (Recommended for development)**
    ```bash
    # Terminal 1 - Start Server
    cd server
@@ -233,11 +235,18 @@ event-app/
    npm run dev
    ```
 
+   **Option 2: Production Mode (Single service)**
+   ```bash
+   # From server directory - builds client and starts server
+   cd server
+   npm run build-and-start
+   ```
+
 6. **Access the application**
-   - **Single Service**: http://localhost:5000 (both frontend and API)
    - **Development Mode**: 
      - Frontend: http://localhost:5173
      - Backend API: http://localhost:5000
+   - **Production Mode**: http://localhost:5000 (both frontend and API)
 
 ## 🎯 Usage Guide
 
