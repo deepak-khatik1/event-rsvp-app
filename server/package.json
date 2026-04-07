@@ -9,7 +9,7 @@
     "build": "cd ../client && npm run build",
     "build-and-start": "npm run build && npm start",
     "heroku-postbuild": "npm run build",
-    "render-build": "cd ../client && npm install && npm run build"
+    "render-build": "npm install && cd ../client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
