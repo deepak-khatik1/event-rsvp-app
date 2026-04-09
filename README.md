@@ -314,7 +314,7 @@ NODE_ENV=production
 - **Database**: MongoDB Atlas for cloud hosting
 - **File Storage**: AWS S3 or Cloudinary for image uploads
 
-## � Screenshots
+## Screenshots
 
 ### 1. Login Page
 ![Login](ss/login.png)
@@ -336,7 +336,7 @@ NODE_ENV=production
 
 ---
 
-## �📈 Future Enhancements
+## 📈 Future Enhancements
 
 ### Planned Features
 - **Event Categories**: Organize events by categories and tags
