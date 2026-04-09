@@ -314,7 +314,29 @@ NODE_ENV=production
 - **Database**: MongoDB Atlas for cloud hosting
 - **File Storage**: AWS S3 or Cloudinary for image uploads
 
-## 📈 Future Enhancements
+## � Screenshots
+
+### 1. Login Page
+![Login](ss/login.png)
+
+### 2. Register Page
+![Register](ss/register.png)
+
+### 3. Events Listing
+![Events](ss/events.png)
+
+### 4. Event Details
+![Event Detail](ss/event.png)
+
+### 5. My Events
+![My Events](ss/my-events.png)
+
+### 6. Admin Dashboard
+![Admin Dashboard](ss/admin_dashboard.png)
+
+---
+
+## �📈 Future Enhancements
 
 ### Planned Features
 - **Event Categories**: Organize events by categories and tags
